@@ -1,4 +1,7 @@
 venv/
+.venv/
+.env
+*.log
 *webui_secret_key
 *cache_ggshield
 config.json
