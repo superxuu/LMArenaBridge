@@ -39,6 +39,7 @@ RUN python -m camoufox fetch
 
 # 6. 复制项目源代码
 # 建议只复制必要的目录，避免把 .git 等无关文件打入镜像
+COPY models.json .
 COPY src/ ./src/
 
 # 7. 暴露端口 (Zeabur 网关对接)
@@ -46,4 +47,5 @@ EXPOSE 8000
 
 # 8. 启动命令
 # 使用 xvfb-run -a 自动分配显示编号，并模拟标准显示器分辨率
-CMD ["xvfb-run", "-a", "--server-args=-screen 0 1280x1024x24", "python", "src/main.py"]
+# 注意：这里改用 uvicorn 命令行启动，以便通过 $PORT 环境变量动态绑定端口
+CMD ["sh", "-c", "xvfb-run -a --server-args='-screen 0 1280x1024x24' uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
